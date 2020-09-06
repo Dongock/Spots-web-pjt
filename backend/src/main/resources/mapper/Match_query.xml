@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="com.spots.mapper.MatchMapper">
+
+   <!-- selectall  -->
+   <select id="TListMain" resultType="com.spots.dto.TMatchInfo">
+      select * from team_matching
+      order by ready_num
+   </select>
+   
+   <select id="FListMain" resultType="com.spots.dto.FMatchInfo">
+      select * from free_matching
+      order by ready_num
+   </select>
+   
+    <!-- 리스트 필터  -->
+    <select id="TListAll" resultType="com.spots.dto.TMatchInfo">
+        select * from team_matching
+        where 1=1 
+        <!-- 0-1 자리  -->
+        <if test = 'doe != null'>
+           and left(dong_code, 2) = #{doe}
+        </if>
+        <!-- 2-3 자리 -->
+        <if test = 'si != null'>
+           and left(dong_code, 4) = #{si}
+        </if>
+        <!-- 5-9 자리 -->
+        <if test = 'dong != null'>
+           and dong_code = #{dong}
+        </if>
+        <if test = 'word != null'>
+           and title like concat('%', #{word}, '%')
+        </if>
+        
+        order by ready_num
+    </select>
+    
+    <!-- state, city, dong 순서 -->
+    <select id="FListAll" resultType="com.spots.dto.FMatchInfo">
+        select * from free_matching
+        where 1=1 
+        <!-- 0-1 자리  -->
+        <if test = 'doe != null'>
+           and left(dong_code, 2) = #{doe}
+        </if>
+        <!-- 2-3 자리 -->
+        <if test = 'si != null'>
+           and left(dong_code, 4) = #{si}
+        </if>
+        <!-- 5-9 자리 -->
+        <if test = 'dong != null'>
+           and dong_code = #{dong}
+        </if>
+        <if test = 'word != null'>
+           and title like concat('%', #{word}, '%')
+        </if>
+        
+        order by ready_num
+    </select>
+    
+    <!-- 매칭 방 중복 체크 head_uid -->
+    <select id="TRoomCheck" resultType="com.spots.dto.TMatchInfo">
+        select * from team_matching where head_uid = #{head_uid};
+    </select>
+    
+    <select id="FRoomCheck" resultType="com.spots.dto.FMatchInfo">
+        select * from free_matching where head_uid = #{head_uid};
+    </select>
+    
+    <!-- 매칭 방 정보 조회 UID-->
+    <select id="TListRoom" resultType="com.spots.dto.TMatchInfo">
+        select * from team_matching where uid = #{uid};
+    </select>
+    
+    <select id="FListRoom" resultType="com.spots.dto.FMatchInfo">
+        select * from free_matching where uid = #{uid};
+    </select>
+    
+    <!-- 매칭 방 만들기 -->
+    <insert id="TRoomCreate">
+      insert into team_matching
+      ( head_uid, home_team_uid, away_team_uid, home_score, away_score, ready_num,
+        place_uid, price, head_price, matching_date,
+        dong_code, title, manager_uid)
+      values
+      ( #{head_uid}, #{home_team_uid}, 0, 0, 0, 1, 
+        #{place_uid}, #{price}, 0, #{matching_date},
+        #{dong_code}, #{title}, FLOOR(1 + (RAND() * 5)));
+   </insert>
+   
+   <insert id="FRoomCreate"> 
+      insert into matching_entry (goalkeeper_uid) values(null), (null);
+        
+        insert into free_matching
+        (head_uid, home_matching_entry_uid, away_matching_entry_uid, home_score, away_score, ready_num, 
+         place_uid, price, head_price, matching_date,
+         dong_code, title, manager_uid)
+        values
+        (#{head_uid}, LAST_INSERT_ID(), LAST_INSERT_ID() + 1, 0, 0, 0,
+        #{place_uid}, #{price}, 0, #{matching_date},
+        #{dong_code}, #{title}, FLOOR(1 + (RAND() * 5)))
+    </insert>
+    
+    <!-- 방 정보 수정 -->
+    <update id="TRoomModify">
+    
+    </update>
+    
+    <update id="FRoomModify">
+    
+    </update>
+    
+    <update id="matchEnd">
+    	update free_matching set mvp = #{mvp} where uid= #{uid}
+    </update>
+    
+    <update id="TRoomJoin">
+    	update team_matching set away_team_uid = #{uid}, ready_num= ready_num+1 where uid= #{room_uid}
+    </update>
+    
+</mapper>

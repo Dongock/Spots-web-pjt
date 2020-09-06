@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.spots.mapper.UserMapper">
+	 
+	
+	<select id="login" resultType="com.spots.dto.UserInfo">
+		select * from user where email= #{email} and password = #{password}
+	</select>
+	<select id="detail" resultType="com.spots.dto.UserInfo">
+		select * from user where email= #{email}
+	</select>
+	<select id="detail2" resultType="com.spots.dto.UserInfo">
+		select * from user where uid= #{uid}
+	</select>
+	<insert id="signUp">
+		insert into user
+		(email, password, nickname) 
+		VALUES(
+			#{email},#{password},#{nickname}
+		)
+	</insert>
+	<update id="modify">
+		update user 
+		   set 	password	= #{password}			
+				,nickname	= #{nickname}				
+				,comment	= #{comment}			
+		 where uid= #{uid}
+	</update>
+	<select id="findPwdByEmail" resultType="com.spots.dto.UserInfo">
+		select * from user where email= #{email}
+	</select>
+	<update id="joinTeam">
+		update team set player_num = player_num+1 where uid =  #{team_uid};
+		update user 
+		   set 	 team_uid 	= #{team_uid}			
+		 where uid= #{uid};
+		 delete from apply_team where user_uid = #{uid};
+	</update>
+	<update id="outTeam">
+		update team set player_num = player_num-1 where uid =  #{team_uid};
+		update user 
+		   set 	 team_uid 	= 0		
+		 where uid= #{uid}
+	</update>
+	
+	<delete id="rejectTeam">
+		delete from apply_team where team_uid = #{team_uid} and user_uid = #{uid};
+	</delete>
+	
+	<insert id="applyTeam">
+		insert into apply_team
+		(team_uid, user_uid, comment) 
+		VALUES(
+			#{team_uid}, #{user_uid}, #{comment}
+		)
+	</insert>
+</mapper>
+
+
+
+
+
+
