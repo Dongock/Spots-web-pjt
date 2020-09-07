@@ -72,7 +72,7 @@ $yarn serve --port 3000
 
 #### 와이어 프레임
 
-<http://github.com/Dongock/Spots-web-pjt.git/wireframe.pdf>
+<http://github.com/Dongock/Spots-web-pjt/blob/master/wireframe.pdf>
 
 
 
@@ -985,4 +985,4 @@ $yarn serve --port 3000
 
 ## :calendar: 개발일정
 
-![image-20200907162444693](C:\Users\multicampus\Desktop\first\공통 프로젝트\내 깃\Spots-web-pjt-\image-20200907162444693.png)
+<https://github.com/Dongock/Spots-web-pjt/blob/master/image-20200907162444693.png>
