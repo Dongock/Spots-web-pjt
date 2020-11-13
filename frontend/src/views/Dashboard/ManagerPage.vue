@@ -1,20 +1,26 @@
 <template>
   <div>
+    <!-- 축구 모임 지원 사이트에서 경기 후 매니저가 선수평가를 내리는 페이지 -->
+    <!-- 제목 부분 -->
    <base-header class="pb-5 pt-md-8 mb-4">
       <div class="row d-flex flex-row justify-content-between">
         <div class="col-7">
           <card title="Room information" class="mb-4 mb-xl-0">
             <h2 class="mb-0">{{ RoomData.title }}</h2>
+            <!-- 방의 이름을 불러옴 -->
           </card>
-          <h3 class="text-white mt-2">담당 매니저 : {{Manager.nickname}}  </h3>
+          <h3 class="text-white mt-2">담당 매니저 : {{Manager.nickname}}  </h3>4
+          <!-- 매니저 이름 불러오기 -->
         </div>
       </div>
     </base-header>
 
+<!-- 매니저 평가를 위한 선수 창 -->
     <div class="row d-flex flex-row" :class="type === 'dark' ? 'bg-default' : ''">
       <div class="table-responsive col m-2">
         <div class="text-center p-2 mb-2 bg-danger rounded-top">
           <h2>Red Team</h2>
+          <!-- 좌측의 레드팀 -->
         </div>
         <base-table
           class="table align-items-center table-flush border-solid table-danger rounded-bottom text-center"
@@ -23,6 +29,7 @@
           tbody-classes="list"
           :data="RedtableDatas"
         >
+        <!-- 레드팀의 데이터를 불러와서 표를 채움 -->
           <template slot="columns">
             <th>유저 명</th>
             <th>기록 및 평가</th>
@@ -37,47 +44,49 @@
                   <a class="dropdown-item" v-for="(sc,i) in score" 
                   v-bind:key="i" @click="inputgoal(sc, row) ">{{sc}}</a>
               </base-dropdown></button>
-
+            <!-- 매니저가 직접 골을 입력하는 방식 -->
               <button class="btn-secondary btn-lg">도움 : {{ row.assist }}<base-dropdown>
               <a class="dropdown-item" v-for="(sc,i) in score" 
               v-bind:key="i" @click="inputassist(sc, row)">{{sc}}</a></base-dropdown></button>
               
               <base-button block type="secondary" size="lg" class="col-4 mr-3"  @click="modal1 = true, black(row)" >신고
               </base-button>
+              <!-- 매니저가 도움을 입력하는 방식 -->
               <modal :show.sync="modal1" body-classes="p-0" modal-classes="modal-dialog modal-md">
-          <card
-            type="secondary"
-            shadow
-            header-classes="bg-white pb-5"
-            body-classes="px-lg-5 py-lg-5"
-            class="border-0"
-          >
-            <template >
-              <div class="text-muted text-center mb-3">
-                <h4>유저 {{rowlist.name}} 블랙리스트 신고하기</h4>
-              </div>
-            </template>
-            <template>
-              <div class="text-center text-muted mb-4">
-                <h6>신고 사유를 선택해주세요</h6>
-              </div>
-              <form role="form">
-                <base-button class="btn-secondary mr-0 btn-lg" style="z-index:9999;">신고사유 : {{wbl}}<base-dropdown>
-              <a class="dropdown-item" v-for="(bl,i) in blacklist" 
-              v-bind:key="i" @click="inputblack(bl)">{{bl}}</a></base-dropdown></base-button>
-                <div class="text-center">
-                  <base-button class="mt-3" type="warning" @click="modal1 = false, blackpoint(wbl)" >제출</base-button>
-                  <base-button class="mt-3" type="secondary" @click="modal1 = false">닫기</base-button>
-                </div>
-              </form>
-            </template>
-          </card>
-        </modal>
+                <!-- 블랙리스트를 선정하는 모달 창 -->
+                <card
+                  type="secondary"
+                  shadow
+                  header-classes="bg-white pb-5"
+                  body-classes="px-lg-5 py-lg-5"
+                  class="border-0"
+                >
+                <template >
+                  <div class="text-muted text-center mb-3">
+                    <h4>유저 {{rowlist.name}} 블랙리스트 신고하기</h4>
+                  </div>
+                </template>
+                <template>
+                  <div class="text-center text-muted mb-4">
+                    <h6>신고 사유를 선택해주세요</h6>
+                  </div>
+                  <form role="form">
+                    <base-button class="btn-secondary mr-0 btn-lg" style="z-index:9999;">신고사유 : {{wbl}}<base-dropdown>
+                  <a class="dropdown-item" v-for="(bl,i) in blacklist" 
+                  v-bind:key="i" @click="inputblack(bl)">{{bl}}</a></base-dropdown></base-button>
+                    <div class="text-center">
+                      <base-button class="mt-3" type="warning" @click="modal1 = false, blackpoint(wbl)" >제출</base-button>
+                      <base-button class="mt-3" type="secondary" @click="modal1 = false">닫기</base-button>
+                    </div>
+                  </form>
+                </template>
+              </card>
+            </modal>
             </td>
           </template>
         </base-table>
       </div>
-
+      <!-- 위와 마찬가지로 블루팀 -->
       <div class="table-responsive col m-2">
         <div class="text-center p-2 mb-2 bg-primary rounded-top">
           <h2 class="text-white">Blue Team</h2>
@@ -112,42 +121,43 @@
               <base-button block type="secondary" size="lg" class="col-4 mr-3" @click="modal1 = true, black(row)" >신고
               </base-button>
               <modal :show.sync="modal1" body-classes="p-0" modal-classes="modal-dialog modal-md">
-          <card
-            type="secondary"
-            shadow
-            header-classes="bg-white pb-5"
-            body-classes="px-lg-5 py-lg-5"
-            class="border-0"
-          >
-            <template >
-              <div class="text-muted text-center mb-3">
-                <h4>유저 {{rowlist.name}} 블랙리스트 신고하기</h4>
-              </div>
-            </template>
-            <template>
-              <div class="text-center text-muted mb-4">
-                <h6>신고 사유를 선택해주세요</h6>
-              </div>
-              <form role="form">
-                <base-button class="btn-secondary mr-0 btn-lg" style="z-index:9999;">신고사유 : {{wbl}}<base-dropdown>
-              <a class="dropdown-item" v-for="(bl,i) in blacklist" 
-              v-bind:key="i" @click="inputblack(bl)">{{bl}}</a></base-dropdown></base-button>
-                <div class="text-center">
-                  <base-button class="mt-3" type="warning" @click="modal1 = false, blackpoint(wbl)" >제출</base-button>
-                  <base-button class="mt-3" type="secondary" @click="modal1 = false">닫기</base-button>
-                </div>
-              </form>
-            </template>
-          </card>
-        </modal>
+                <card
+                  type="secondary"
+                  shadow
+                  header-classes="bg-white pb-5"
+                  body-classes="px-lg-5 py-lg-5"
+                  class="border-0"
+                >
+                  <template >
+                    <div class="text-muted text-center mb-3">
+                      <h4>유저 {{rowlist.name}} 블랙리스트 신고하기</h4>
+                    </div>
+                  </template>
+                  <template>
+                    <div class="text-center text-muted mb-4">
+                      <h6>신고 사유를 선택해주세요</h6>
+                    </div>
+                    <form role="form">
+                      <base-button class="btn-secondary mr-0 btn-lg" style="z-index:9999;">신고사유 : {{wbl}}<base-dropdown>
+                    <a class="dropdown-item" v-for="(bl,i) in blacklist" 
+                    v-bind:key="i" @click="inputblack(bl)">{{bl}}</a></base-dropdown></base-button>
+                      <div class="text-center">
+                        <base-button class="mt-3" type="warning" @click="modal1 = false, blackpoint(wbl)" >제출</base-button>
+                        <base-button class="mt-3" type="secondary" @click="modal1 = false">닫기</base-button>
+                      </div>
+                    </form>
+                  </template>
+                </card>
+              </modal>
             </td>
           </template>
         </base-table>
       </div>
     </div>
     <div class=" d-flex justify-content-between" style="height:40px;">
-    <base-button type="success"  class="ml-4" @click="modal2 = true, pickmvp(RedtableDatas, BluetableDatas)">오늘의 MVP 선정</base-button>
-    <modal :show.sync="modal2" body-classes="p-0" modal-classes="modal-dialog modal-md">
+      <!-- mvp 선정을 위한 버튼 -->
+      <base-button type="success"  class="ml-4" @click="modal2 = true, pickmvp(RedtableDatas, BluetableDatas)">오늘의 MVP 선정</base-button>
+      <modal :show.sync="modal2" body-classes="p-0" modal-classes="modal-dialog modal-md">
           <card
             type="secondary"
             shadow
@@ -178,9 +188,12 @@
             </template>
           </card>
         </modal>
+        <!-- 매니저가 입력한 값을 통해 스코어를 보여주는 버튼 -->
      <base-button type="secondary" >{{this.winteam}} {{this.rgoal}} : {{this.bgoal}}</base-button>
     <base-button type="warning" class="mr-4" @click='submit'>평가 및 경기 마치기</base-button> 
+    <!-- 경기를 마치고 정보를 제출하는 버튼 -->
   </div>
+  <!-- 예외 상황을 대비한 모달 -->
    <modal :show.sync="dupli" gradient="danger" class="text-center">
                    <div class="py-3 text-center mb-0">
                      <h3 class="text-white mb-3">이미 투표하셨습니다.</h3>
@@ -261,6 +274,7 @@ export default {
 
   methods: {
     inputgoal(sc, row) {
+      // 골을 입력했을 때
        row.goal = sc;
        for (var a=0; a<this.RedtableDatas.length; a++) {
          if (this.RedtableDatas[a].uid == (row.uid)) {
@@ -283,16 +297,20 @@ export default {
       this.rowlist = row1.concat(row2);
     },
     choicemvp(un, choice) {
+      // mvp 선정
       this.mvp = choice
       this.mvplist = un
     },
     inputassist(sc, row) {
+      // 어시스트 삽입
      row.assist = sc;
     },
     inputblack(bl) {
       this.wbl = bl
+      // 블랙리스트 신고를 위해 삽입
     },
     blackpoint(wbl) {
+      // 블랙리스트로 선정하여 제출하기 전에 정보 갱신
       if (this.dupoint.includes(this.rowlist.uid)) {
         this.wbl="";
         this.dupli = true;
@@ -317,6 +335,7 @@ export default {
       }
     },
     mvppoint() {
+      // mvp를 선정해서 제출하기 전에 정보 갱신
         if (this.dumvp.includes(this.mvplist.uid)) {
         this.dupli = true
         }
@@ -354,24 +373,14 @@ export default {
         } 
         this.ismvp = true;
     },
-    UserEnter() {
-      this.SearchPosition
-
-      if (this.myPosUid != 0) {
-        const EnterInfo = new FormData();
-        EnterInfo.append("uid", this.$cookies.get("UserInfo").uid);
-        EnterInfo.append("positionnum", this.myPosUid);
-        EnterInfo.append("team_entry_uid", this.myTeam);
-        this.$axios
-          .post(this.$SERVER_URL + "FreeMatchRoom/entrylist/", EnterInfo)
-      }
-    },
     RedTeamList() {
+      // 레드팀을 불러오기
       const Team_entry_uid = new FormData();
       Team_entry_uid.append(
         "team_entry_uid",
         this.RoomData.home_matching_entry_uid
       );
+      // 비동기 요청을 통해 레드팀 리스트를 불러옴
       this.$axios
         .post(this.$SERVER_URL + "FreeMatchRoom/entrylist/", Team_entry_uid)
         .then((res) => {
@@ -403,6 +412,7 @@ export default {
       
     },
     RedTeamUser(uid) {
+      // 레드팀 유저 정보를 갱신
       const usid = new FormData()
       usid.append('uid', uid)
       this.$axios.post(this.$SERVER_URL + 'user/detail2/', usid)
@@ -420,6 +430,7 @@ export default {
     },
     
     BlueTeamList() {
+      // 마찬가지로 블루팀 정보를 위해
       const Team_entry_uid = new FormData();
       Team_entry_uid.append(
         "team_entry_uid",
@@ -456,7 +467,7 @@ export default {
    
     },
     BlueTeamUser(uid) {
-   
+  //  블루팀 정보를 갱신
       const usid = new FormData()
       usid.append('uid', uid)
       this.$axios.post(this.$SERVER_URL + 'user/detail2/', usid)
@@ -476,6 +487,7 @@ export default {
     
     },
     goalcheck() {
+      // 넣은 골확인
       for (var a=0; a<this.RedtableDatas.length; a++){
         this.rgoal += this.RedtableDatas[a].goal
         this.bgoal += this.BluetableDatas[a].goal
@@ -483,6 +495,7 @@ export default {
       }
     },
     wincheck(r,b) {
+      // 승리팀 확인
       if (r > b) {
         this.winteam = "레드팀 승리"
         this.homewin = 3;
@@ -497,6 +510,7 @@ export default {
       }
     },
     submit() {
+      // 여태까지 갱신한 정보를 모두 백엔드로 보내기 위한 작업
       if (this.ismvp == true){
       const FreeRoomData = new FormData();
       FreeRoomData.append("uid", this.$route.params.uid);
@@ -519,7 +533,7 @@ export default {
        MatchRoomData.append("dong_code", res.data[0].dong_code);
        MatchRoomData.append("title", res.data[0].title);
        MatchRoomData.append("mvp", res.data[0].mvp);
-      
+      // 승점을 데이터베이스에 넣기 위한 작업
         if (this.homewin == 3){
           this.$axios.post(this.$SERVER_URL + "FreeMatch/win", MatchRoomData)
          
@@ -539,14 +553,12 @@ export default {
       else {
         this.vote = true
       }
-      
+      // MVP 포인트를 넣기 위한 작업
       const MVPdata = new FormData();
       MVPdata.append("uid", this.$route.params.uid);
       MVPdata.append('mvp',1);
       this.$axios.post(this.$SERVER_URL + 'matchEnd/', MVPdata)
-    
-
-
+        // 레드팈 블루팀 모두 데이터 저장을 위해
        for (var a=0; a<this.RedtableDatas.length; a++) {
         const MatchData = new FormData();
         MatchData.append('uid', this.RedtableDatas[a].uid)
@@ -568,19 +580,19 @@ export default {
        
     },
   },
-  mounted() {},
   created() {
-   
     const FreeRoomData = new FormData();
     FreeRoomData.append("uid", this.$route.params.uid);
     this.$axios
       .post(this.$SERVER_URL + "FreeMatchRoom/", FreeRoomData)
       .then((res) => {
         this.manageruid = res.data[0].manager_uid
+        // 문제 있을시 메인페이지로
         if (res.data == "") {
           this.problem = true;
           this.$router.push({ name: "SPOTs" });
         } else {
+          // 메니저 불러오기
           this.RoomData = res.data[0];
            var managerform = new FormData()
             managerform.append('uid', res.data[0].manager_uid)
@@ -604,6 +616,7 @@ export default {
           this.BlueTeamList();
 
         }
+        // 쿠키를 통해 정보를 확인
       if (this.$cookies.isKey("UserInfo")) {
         this.isLogined = true;
         this.isMine = this.$cookies.get("UserInfo").nickname;
